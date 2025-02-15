@@ -28,11 +28,12 @@ class UserPresenter extends StateNotifier<User?> {
     state = user;
   }
 
-  Future<void> loadUser(String id) async {
+  Future<User?> loadUser(String id) async {
     final user = await _getUserUseCase(id);
     if (user != null) {
       state = user;
     }
+    return user;
   }
 
   Future<bool> saveUser(WidgetRef ref) async {

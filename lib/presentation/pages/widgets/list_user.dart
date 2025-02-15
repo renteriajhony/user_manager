@@ -39,7 +39,22 @@ class _ListUserState extends ConsumerState<ListUser> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user.birthDate.toString()),
+                RichText(
+                  text: TextSpan(
+                    text: 'Cumpleaños: ',
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.primary),
+                    children: [
+                      TextSpan(
+                        text: user.birthDate.toString().split(' ')[0],
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Divider(),
                 !isViewDetailList[index]
                     ? SizedBox()

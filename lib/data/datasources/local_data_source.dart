@@ -53,6 +53,7 @@ class LocalDataSource extends _$LocalDataSource {
 
   /// **Método para insertar un usuario**
   Future<void> insertUser(User user) async {
+    await (delete(users)..where((tbl) => tbl.id.equals(user.id))).go();
     await into(users).insert(
       UsersCompanion(
         id: Value(user.id),
@@ -80,6 +81,7 @@ class LocalDataSource extends _$LocalDataSource {
 
   /// **Método para insertar una dirección**
   Future<void> insertListAddress(List<Address> address, String userId) async {
+    await (delete(addresses)..where((tbl) => tbl.userId.equals(userId))).go();
     await batch((batch) {
       for (var a in address) {
         batch.insert(

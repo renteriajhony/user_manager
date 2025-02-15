@@ -39,6 +39,10 @@ class AddressListPresenter extends StateNotifier<AddressListState> {
     state = AddressListState(addresses: updatedList);
   }
 
+  void addCurrentListAddress(List<Address> addresses) {
+    state = AddressListState(addresses: addresses);
+  }
+
   void editCurrentAddress(Address address) {
     state = AddressListState(
       addresses: state.addresses,

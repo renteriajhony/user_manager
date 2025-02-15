@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:user_namager/domain/entities/user.dart';
 import 'package:user_namager/presentation/pages/widgets/address_widget.dart';
 import 'package:user_namager/presentation/providers/addres_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -24,11 +23,26 @@ class UserFormPage extends ConsumerWidget {
   final _lastNameFocusNode = FocusNode();
   final _birthdayFocusNode = FocusNode();
 
+  bool flagUpdate = false;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final addressListState = ref.watch(addressListProvider);
-    if (idUser.trim().isNotEmpty) {
-      print('($idUser)');
+    if (idUser.trim().isNotEmpty && !flagUpdate) {
+      final user = ref.read(userPresenterProvider.notifier).loadUser(idUser);
+      user.then((onValue) {
+        _nameController.text = onValue?.name ?? '';
+        _lastNameController.text = onValue?.lastName ?? '';
+        _birthdayController.text = DateFormat('yyyy-MM-dd')
+            .format(onValue?.birthDate ?? DateTime.now());
+
+        ref
+            .read(addressListProvider.notifier)
+            .addCurrentListAddress(onValue?.addresses ?? []);
+
+        ref.invalidate(userPresenterProvider);
+        flagUpdate = true;
+      });
     }
 
     return Scaffold(
@@ -45,7 +59,7 @@ class UserFormPage extends ConsumerWidget {
           IconButton(
             icon: Icon(Icons.save_as_outlined),
             onPressed: () {
-              saveUser(context, ref, addressListState);
+              saveUser(context, ref, idUser, addressListState);
             },
           ),
         ],
@@ -143,11 +157,12 @@ class UserFormPage extends ConsumerWidget {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    DateTime startDate = DateTime.now().subtract(Duration(days: 1));
     DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: startDate,
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: startDate,
       // locale: const Locale("es", "ES"),
     );
 
@@ -160,6 +175,7 @@ class UserFormPage extends ConsumerWidget {
   saveUser(
     BuildContext context,
     WidgetRef ref,
+    String userId,
     AddressListState addressListState,
   ) async {
     bool isValiadUserForm = _formUserKey.currentState?.validate() ?? false;
@@ -205,7 +221,7 @@ class UserFormPage extends ConsumerWidget {
         return;
       }
     }
-    final userId = Uuid().v4();
+    if (userId.trim().isEmpty) userId = Uuid().v4();
     await ref.read(userPresenterProvider.notifier).setUserState(
           userId,
           _nameController.text,
