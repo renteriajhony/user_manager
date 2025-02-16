@@ -53,7 +53,7 @@ class _ListUserState extends ConsumerState<ListUser> {
                         ),
                       ),
                     ],
-                  ),
+                  ), 
                 ),
                 Divider(),
                 !isViewDetailList[index]

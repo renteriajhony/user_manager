@@ -33,6 +33,8 @@ class Addresses extends Table {
 class LocalDataSource extends _$LocalDataSource {
   LocalDataSource() : super(_openConnection());
 
+  LocalDataSource.forTesting(QueryExecutor db) : super(db);
+
   @override
   int get schemaVersion => 1;
 
