@@ -42,6 +42,7 @@ class AddressWidget extends ConsumerWidget {
         children: [
           Text('Direccion'),
           TextFormField(
+            key: Key('address_street'),
             focusNode: _streetFocusNode,
             controller: _streetController,
             decoration: InputDecoration(labelText: 'Calle'),
@@ -53,6 +54,7 @@ class AddressWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: TextFormField(
+                  key: Key('address_city'),
                   focusNode: _cityFocusNode,
                   controller: _cityController,
                   decoration: InputDecoration(labelText: 'Ciudad'),
@@ -63,6 +65,7 @@ class AddressWidget extends ConsumerWidget {
               Text(','),
               Expanded(
                 child: TextFormField(
+                  key: Key('address_country'),
                   focusNode: _countryFocusNode,
                   controller: _countryController,
                   decoration: InputDecoration(labelText: 'País'),
@@ -71,6 +74,7 @@ class AddressWidget extends ConsumerWidget {
                 ),
               ),
               IconButton(
+                key: Key('address_btn_add'),
                 icon: Icon(Icons.add),
                 onPressed: () {
                   if (AddressWidget.formAddressKey.currentState!.validate()) {
@@ -105,12 +109,4 @@ class AddressWidget extends ConsumerWidget {
       ),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _streetController.dispose();
-  //   _cityController.dispose();
-  //   _countryController.dispose();
-  // }
 }

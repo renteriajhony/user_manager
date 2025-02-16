@@ -34,6 +34,7 @@ class _ListUserState extends ConsumerState<ListUser> {
           elevation: 4,
           color: Theme.of(context).colorScheme.surface,
           child: ListTile(
+            key: Key('${user.id}_$index'),
             onTap: () => context.go('/addUser/${user.id}'),
             title: Text('${user.name} ${user.lastName}'),
             subtitle: Column(
@@ -53,7 +54,7 @@ class _ListUserState extends ConsumerState<ListUser> {
                         ),
                       ),
                     ],
-                  ), 
+                  ),
                 ),
                 Divider(),
                 !isViewDetailList[index]

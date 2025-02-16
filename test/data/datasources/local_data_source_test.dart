@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:user_namager/data/datasources/local_data_source.dart';
 import 'package:user_namager/domain/entities/user.dart';
 import 'package:user_namager/domain/entities/address.dart';
+// ignore: unused_import
 import 'package:drift/drift.dart' hide isNotNull;
 import 'package:drift/native.dart';
 

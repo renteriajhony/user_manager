@@ -1,34 +1,31 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:user_namager/core/router/app_router.dart';
 import 'package:user_namager/presentation/pages/pages.dart';
 
-void main() {
-  testWidgets('Debe navegar a UserListPage cuando la ruta es "/"', (WidgetTester tester) async {
-    final router = appRouter;
+import '../../presentation/base_widget.dart';
 
+void main() {
+  late GoRouter router;
+
+  setUpAll(() {
+    router = appRouter;
+  });
+
+  testWidgets('Debe navegar a UserListPage cuando la ruta es "/"',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
-      ProviderScope( // 🔥 Envuelve en ProviderScope
-        child: MaterialApp.router(
-          routerConfig: router,
-        ),
-      ),
+      baseWidgetRouter(),
     );
 
     // Verificar que UserListPage está presente en la pantalla
     expect(find.byType(UserListPage), findsOneWidget);
   });
 
-  testWidgets('Debe navegar a UserFormPage con un idUser válido', (WidgetTester tester) async {
-    final router = appRouter;
-
+  testWidgets('Debe navegar a UserFormPage con un idUser válido',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp.router(
-          routerConfig: router,
-        ),
-      ),
+      baseWidgetRouter(router: router),
     );
 
     // Simular navegación a la pantalla de formulario con un id específico
@@ -39,15 +36,10 @@ void main() {
     expect(find.byType(UserFormPage), findsOneWidget);
   });
 
-  testWidgets('Debe pasar correctamente el parámetro idUser', (WidgetTester tester) async {
-    final router = appRouter;
-
+  testWidgets('Debe pasar correctamente el parámetro idUser',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp.router(
-          routerConfig: router,
-        ),
-      ),
+      baseWidgetRouter(router: router),
     );
 
     // Simular navegación a la pantalla de formulario con un id específico

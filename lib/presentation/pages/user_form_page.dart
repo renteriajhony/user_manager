@@ -14,7 +14,7 @@ class UserFormPage extends ConsumerWidget {
 
   final String idUser;
 
-  final _formUserKey = GlobalKey<FormState>();
+  static final formUserKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _birthdayController = TextEditingController();
@@ -47,11 +47,14 @@ class UserFormPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crear Usuario'),
+        title: idUser.trim().isEmpty
+            ? Text('Crear Usuario')
+            : Text('Actualizar Usuario'),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
+            ref.read(addressListProvider.notifier).resetCurrentAddressState();
             context.go('/');
           },
         ),
@@ -65,12 +68,13 @@ class UserFormPage extends ConsumerWidget {
         ],
       ),
       body: Form(
-        key: _formUserKey,
+        key: formUserKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               TextFormField(
+                key: Key('user_txt_name'),
                 controller: _nameController,
                 focusNode: _nameFocusNode,
                 decoration: InputDecoration(labelText: 'Nombre'),
@@ -78,6 +82,7 @@ class UserFormPage extends ConsumerWidget {
                     value!.isEmpty ? 'Nombre es requerido' : null,
               ),
               TextFormField(
+                key: Key('user_txt_lastname'),
                 controller: _lastNameController,
                 focusNode: _lastNameFocusNode,
                 decoration: InputDecoration(labelText: 'Apellido'),
@@ -85,6 +90,7 @@ class UserFormPage extends ConsumerWidget {
                     value!.isEmpty ? 'Apellido es requerido' : null,
               ),
               TextFormField(
+                key: Key('user_txt_birtday'),
                 controller: _birthdayController,
                 focusNode: _birthdayFocusNode,
                 readOnly: true,
@@ -106,6 +112,7 @@ class UserFormPage extends ConsumerWidget {
               ),
               Expanded(
                 child: ListView.builder(
+                  key: Key('list_address_user'),
                   padding: EdgeInsets.symmetric(vertical: 50),
                   itemCount: addressListState.addresses.length,
                   itemBuilder: (context, index) {
@@ -178,7 +185,7 @@ class UserFormPage extends ConsumerWidget {
     String userId,
     AddressListState addressListState,
   ) async {
-    bool isValiadUserForm = _formUserKey.currentState?.validate() ?? false;
+    bool isValiadUserForm = formUserKey.currentState?.validate() ?? false;
     bool existAddress = addressListState.addresses.isNotEmpty;
     bool isValiadAddressForm = false;
 
