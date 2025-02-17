@@ -11,6 +11,8 @@ class LitstAddress extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...listAddress.mapIndexed(
           (index, item) => RichText(
