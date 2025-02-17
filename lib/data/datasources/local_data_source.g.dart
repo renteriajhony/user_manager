@@ -3,7 +3,7 @@
 part of 'local_data_source.dart';
 
 // ignore_for_file: type=lint
-class $UsersTable extends Users with TableInfo<$UsersTable, UserEntity> {
+class $UsersTable extends Users with TableInfo<$UsersTable, UserModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -38,7 +38,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserEntity> {
   String get actualTableName => $name;
   static const String $name = 'users';
   @override
-  VerificationContext validateIntegrity(Insertable<UserEntity> instance,
+  VerificationContext validateIntegrity(Insertable<UserModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -69,11 +69,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserEntity> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  UserEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+  UserModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return UserEntity(
+    return UserModel(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -91,12 +91,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserEntity> {
   }
 }
 
-class UserEntity extends DataClass implements Insertable<UserEntity> {
+class UserModel extends DataClass implements Insertable<UserModel> {
   final String id;
   final String name;
   final String lastName;
   final DateTime birthDate;
-  const UserEntity(
+  const UserModel(
       {required this.id,
       required this.name,
       required this.lastName,
@@ -120,10 +120,10 @@ class UserEntity extends DataClass implements Insertable<UserEntity> {
     );
   }
 
-  factory UserEntity.fromJson(Map<String, dynamic> json,
+  factory UserModel.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return UserEntity(
+    return UserModel(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       lastName: serializer.fromJson<String>(json['lastName']),
@@ -141,16 +141,16 @@ class UserEntity extends DataClass implements Insertable<UserEntity> {
     };
   }
 
-  UserEntity copyWith(
+  UserModel copyWith(
           {String? id, String? name, String? lastName, DateTime? birthDate}) =>
-      UserEntity(
+      UserModel(
         id: id ?? this.id,
         name: name ?? this.name,
         lastName: lastName ?? this.lastName,
         birthDate: birthDate ?? this.birthDate,
       );
-  UserEntity copyWithCompanion(UsersCompanion data) {
-    return UserEntity(
+  UserModel copyWithCompanion(UsersCompanion data) {
+    return UserModel(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       lastName: data.lastName.present ? data.lastName.value : this.lastName,
@@ -160,7 +160,7 @@ class UserEntity extends DataClass implements Insertable<UserEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('UserEntity(')
+    return (StringBuffer('UserModel(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('lastName: $lastName, ')
@@ -174,14 +174,14 @@ class UserEntity extends DataClass implements Insertable<UserEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is UserEntity &&
+      (other is UserModel &&
           other.id == this.id &&
           other.name == this.name &&
           other.lastName == this.lastName &&
           other.birthDate == this.birthDate);
 }
 
-class UsersCompanion extends UpdateCompanion<UserEntity> {
+class UsersCompanion extends UpdateCompanion<UserModel> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> lastName;
@@ -204,7 +204,7 @@ class UsersCompanion extends UpdateCompanion<UserEntity> {
         name = Value(name),
         lastName = Value(lastName),
         birthDate = Value(birthDate);
-  static Insertable<UserEntity> custom({
+  static Insertable<UserModel> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? lastName,
@@ -270,7 +270,7 @@ class UsersCompanion extends UpdateCompanion<UserEntity> {
 }
 
 class $AddressesTable extends Addresses
-    with TableInfo<$AddressesTable, AddressEntity> {
+    with TableInfo<$AddressesTable, AddressModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -290,8 +290,7 @@ class $AddressesTable extends Addresses
       'user_id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('REFERENCES users (id)'));
+      $customConstraints: 'REFERENCES users(id)');
   static const VerificationMeta _streetMeta = const VerificationMeta('street');
   @override
   late final GeneratedColumn<String> street = GeneratedColumn<String>(
@@ -316,7 +315,7 @@ class $AddressesTable extends Addresses
   String get actualTableName => $name;
   static const String $name = 'addresses';
   @override
-  VerificationContext validateIntegrity(Insertable<AddressEntity> instance,
+  VerificationContext validateIntegrity(Insertable<AddressModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -353,9 +352,9 @@ class $AddressesTable extends Addresses
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AddressEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+  AddressModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AddressEntity(
+    return AddressModel(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       userId: attachedDatabase.typeMapping
@@ -375,13 +374,13 @@ class $AddressesTable extends Addresses
   }
 }
 
-class AddressEntity extends DataClass implements Insertable<AddressEntity> {
+class AddressModel extends DataClass implements Insertable<AddressModel> {
   final int id;
   final String userId;
   final String street;
   final String city;
   final String country;
-  const AddressEntity(
+  const AddressModel(
       {required this.id,
       required this.userId,
       required this.street,
@@ -408,10 +407,10 @@ class AddressEntity extends DataClass implements Insertable<AddressEntity> {
     );
   }
 
-  factory AddressEntity.fromJson(Map<String, dynamic> json,
+  factory AddressModel.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AddressEntity(
+    return AddressModel(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       street: serializer.fromJson<String>(json['street']),
@@ -431,21 +430,21 @@ class AddressEntity extends DataClass implements Insertable<AddressEntity> {
     };
   }
 
-  AddressEntity copyWith(
+  AddressModel copyWith(
           {int? id,
           String? userId,
           String? street,
           String? city,
           String? country}) =>
-      AddressEntity(
+      AddressModel(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         street: street ?? this.street,
         city: city ?? this.city,
         country: country ?? this.country,
       );
-  AddressEntity copyWithCompanion(AddressesCompanion data) {
-    return AddressEntity(
+  AddressModel copyWithCompanion(AddressesCompanion data) {
+    return AddressModel(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       street: data.street.present ? data.street.value : this.street,
@@ -456,7 +455,7 @@ class AddressEntity extends DataClass implements Insertable<AddressEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('AddressEntity(')
+    return (StringBuffer('AddressModel(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('street: $street, ')
@@ -471,7 +470,7 @@ class AddressEntity extends DataClass implements Insertable<AddressEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AddressEntity &&
+      (other is AddressModel &&
           other.id == this.id &&
           other.userId == this.userId &&
           other.street == this.street &&
@@ -479,7 +478,7 @@ class AddressEntity extends DataClass implements Insertable<AddressEntity> {
           other.country == this.country);
 }
 
-class AddressesCompanion extends UpdateCompanion<AddressEntity> {
+class AddressesCompanion extends UpdateCompanion<AddressModel> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> street;
@@ -502,7 +501,7 @@ class AddressesCompanion extends UpdateCompanion<AddressEntity> {
         street = Value(street),
         city = Value(city),
         country = Value(country);
-  static Insertable<AddressEntity> custom({
+  static Insertable<AddressModel> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? street,
@@ -595,10 +594,10 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
 });
 
 final class $$UsersTableReferences
-    extends BaseReferences<_$LocalDataSource, $UsersTable, UserEntity> {
+    extends BaseReferences<_$LocalDataSource, $UsersTable, UserModel> {
   $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$AddressesTable, List<AddressEntity>>
+  static MultiTypedResultKey<$AddressesTable, List<AddressModel>>
       _addressesRefsTable(_$LocalDataSource db) =>
           MultiTypedResultKey.fromTable(db.addresses,
               aliasName:
@@ -725,14 +724,14 @@ class $$UsersTableAnnotationComposer
 class $$UsersTableTableManager extends RootTableManager<
     _$LocalDataSource,
     $UsersTable,
-    UserEntity,
+    UserModel,
     $$UsersTableFilterComposer,
     $$UsersTableOrderingComposer,
     $$UsersTableAnnotationComposer,
     $$UsersTableCreateCompanionBuilder,
     $$UsersTableUpdateCompanionBuilder,
-    (UserEntity, $$UsersTableReferences),
-    UserEntity,
+    (UserModel, $$UsersTableReferences),
+    UserModel,
     PrefetchHooks Function({bool addressesRefs})> {
   $$UsersTableTableManager(_$LocalDataSource db, $UsersTable table)
       : super(TableManagerState(
@@ -784,8 +783,8 @@ class $$UsersTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (addressesRefs)
-                    await $_getPrefetchedData<UserEntity, $UsersTable,
-                            AddressEntity>(
+                    await $_getPrefetchedData<UserModel, $UsersTable,
+                            AddressModel>(
                         currentTable: table,
                         referencedTable:
                             $$UsersTableReferences._addressesRefsTable(db),
@@ -805,14 +804,14 @@ class $$UsersTableTableManager extends RootTableManager<
 typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
     _$LocalDataSource,
     $UsersTable,
-    UserEntity,
+    UserModel,
     $$UsersTableFilterComposer,
     $$UsersTableOrderingComposer,
     $$UsersTableAnnotationComposer,
     $$UsersTableCreateCompanionBuilder,
     $$UsersTableUpdateCompanionBuilder,
-    (UserEntity, $$UsersTableReferences),
-    UserEntity,
+    (UserModel, $$UsersTableReferences),
+    UserModel,
     PrefetchHooks Function({bool addressesRefs})>;
 typedef $$AddressesTableCreateCompanionBuilder = AddressesCompanion Function({
   Value<int> id,
@@ -830,7 +829,7 @@ typedef $$AddressesTableUpdateCompanionBuilder = AddressesCompanion Function({
 });
 
 final class $$AddressesTableReferences
-    extends BaseReferences<_$LocalDataSource, $AddressesTable, AddressEntity> {
+    extends BaseReferences<_$LocalDataSource, $AddressesTable, AddressModel> {
   $$AddressesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $UsersTable _userIdTable(_$LocalDataSource db) => db.users
@@ -977,14 +976,14 @@ class $$AddressesTableAnnotationComposer
 class $$AddressesTableTableManager extends RootTableManager<
     _$LocalDataSource,
     $AddressesTable,
-    AddressEntity,
+    AddressModel,
     $$AddressesTableFilterComposer,
     $$AddressesTableOrderingComposer,
     $$AddressesTableAnnotationComposer,
     $$AddressesTableCreateCompanionBuilder,
     $$AddressesTableUpdateCompanionBuilder,
-    (AddressEntity, $$AddressesTableReferences),
-    AddressEntity,
+    (AddressModel, $$AddressesTableReferences),
+    AddressModel,
     PrefetchHooks Function({bool userId})> {
   $$AddressesTableTableManager(_$LocalDataSource db, $AddressesTable table)
       : super(TableManagerState(
@@ -1071,14 +1070,14 @@ class $$AddressesTableTableManager extends RootTableManager<
 typedef $$AddressesTableProcessedTableManager = ProcessedTableManager<
     _$LocalDataSource,
     $AddressesTable,
-    AddressEntity,
+    AddressModel,
     $$AddressesTableFilterComposer,
     $$AddressesTableOrderingComposer,
     $$AddressesTableAnnotationComposer,
     $$AddressesTableCreateCompanionBuilder,
     $$AddressesTableUpdateCompanionBuilder,
-    (AddressEntity, $$AddressesTableReferences),
-    AddressEntity,
+    (AddressModel, $$AddressesTableReferences),
+    AddressModel,
     PrefetchHooks Function({bool userId})>;
 
 class $LocalDataSourceManager {

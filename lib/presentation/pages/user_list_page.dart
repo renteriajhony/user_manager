@@ -26,10 +26,13 @@ class UserListPage extends ConsumerWidget {
         padding: EdgeInsets.all(20),
         child: userListPresenter.isLoading
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  key: Key('louder_user_list'),
+                ),
               )
             : (listUser?.length ?? 0) == 0
                 ? Center(
+                    key: Key('empty_user_list'),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +49,9 @@ class UserListPage extends ConsumerWidget {
                       ],
                     ),
                   )
-                : ListUser(),
+                : ListUser(
+                    key: Key('all_user_list'),
+                  ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
