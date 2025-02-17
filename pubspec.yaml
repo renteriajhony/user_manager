@@ -1,5 +1,5 @@
 name: user_namager
-description: "App de flutter que crea, lee, actualiza y elimina usuarios de una base de datos sqlite"
+description: "Prueba tecnica de Double V Partners; es una App de flutter que crea, lee, actualiza usuarios de una base de datos sqlite"
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
